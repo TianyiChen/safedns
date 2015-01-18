@@ -14,7 +14,6 @@ Imports System.Reflection
 
 Module main
     Const CacheLimit As UInteger = 10000
-    Dim server As String = "https://the.safe.dns.server/dns.php?q="
     Dim cache(1000, 1) As String
     Dim currentCache As UInt64 = 0
 
