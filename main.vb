@@ -16,12 +16,15 @@ Module main
     Const CacheLimit As UInteger = 10000
     Dim cache(1000, 1) As String
     Dim currentCache As UInt64 = 0
-
+    Dim blacklist As String
     ' Main entry point
     ' Inits the server and start listening
     ' Exit on keypress
     Sub Main()
-        Console.WriteLine("Last update @ 2015/1/18 15:35")
+        Using file As New System.IO.StreamReader("blacklist.txt")
+            blacklist = file.ReadToEnd()
+            Console.WriteLine("Blacklist:{0}", blacklist)
+            file.Close() : End Using
         Using server = New DnsServer(IPAddress.Any, 10, 10, AddressOf ProcessQuery)
             server.Start()
             Console.WriteLine("Press any key to stop server")
@@ -39,6 +42,11 @@ Module main
         If (query IsNot Nothing And query.Questions.Count = 1) Then
 
             Dim question As DnsQuestion = query.Questions(0)
+            'If the domain is in the black list.
+            If IfMatchs(question.Name, blacklist) Then
+                CTT = "0.0.0.0;" : GoTo Fnreply
+            End If
+            'cache
             For i As UInt64 = 0 To currentCache
                 If cache(i, 0) = question.Name Then
                     CTT = cache(i, 1)
@@ -67,6 +75,7 @@ Module main
                 currentCache += 1
 nocache:
 Fnreply:
+                'Return the request using CTT.
                 CTT = CTT.Replace(" ", "")
                 Do Until CTT = ""
                     address = IPAddress.Parse(Mid(CTT, 1, InStr(CTT, ";") - 1))
@@ -85,6 +94,26 @@ Fnreply:
         Return message
 
     End Function
-
-
+    Function IfMatchs(q As String, list As String) As Boolean
+        Dim Lenq = Len(q)
+        Dim domain As String
+        Do Until list = ""
+            domain = Mid(list, 1, InStr(list, ";") - 1)
+            If Mid(domain, 1, 1) = "." Then
+                'If .domain
+                If q = Mid(domain, 2) Or Mid(q, w(Lenq, Len(domain))) = domain Then
+                    Return True : Exit Function
+                End If
+            Else
+                If q = domain Then
+                    Return True : Exit Function
+                End If
+            End If
+            list = Mid(list, InStr(list, ";") + 1)
+        Loop
+        Return False
+    End Function
+    Function w(a As Integer, b As Integer) As UInteger
+        If a - b + 1 > 0 Then Return a - b + 1 Else Return 1
+    End Function
 End Module
