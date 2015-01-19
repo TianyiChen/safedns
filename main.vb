@@ -17,19 +17,27 @@ Module main
     Dim cache(1000, 1) As String
     Dim currentCache As UInt64 = 0
     Dim blacklist As String
+    'The following variables are used for statistics usage.
+    '<Not defined yet.>
     ' Main entry point
     ' Inits the server and start listening
     ' Exit on keypress
     Sub Main()
         Using file As New System.IO.StreamReader("blacklist.txt")
-            blacklist = file.ReadToEnd()
+            blacklist = file.ReadToEnd().Replace(vbCrLf, ";").Replace(",", ";")
             Console.WriteLine("Blacklist:{0}", blacklist)
             file.Close() : End Using
-        Using server = New DnsServer(IPAddress.Any, 10, 10, AddressOf ProcessQuery)
-            server.Start()
-            Console.WriteLine("Press any key to stop server")
-            Console.ReadKey()
-        End Using
+        Dim iptolisten As String = InputBox("Which IP do you want to listen?" + vbCrLf + "Type 0.0.0.0 for all available IPs", "Some information needed", "0.0.0.0")
+        If iptolisten = "0.0.0.0" Then
+            Using server = New DnsServer(IPAddress.Any, 10, 10, AddressOf ProcessQuery)
+                server.Start() : Call UIHander()
+            End Using
+        Else
+            Dim iptemp As IPAddress = IPAddress.Parse(iptolisten)
+            Using server = New DnsServer(IPAddress.Any, 10, 10, AddressOf ProcessQuery)
+                server.Start() : Call UIHander()
+            End Using
+        End If
     End Sub
     ' Processes the DNS queries
     Private Function ProcessQuery(ByVal message As DnsMessageBase, ByVal clientAddress As IPAddress, ByVal protocol As ProtocolType) As DnsMessageBase
@@ -116,4 +124,17 @@ Fnreply:
     Function w(a As Integer, b As Integer) As UInteger
         If a - b + 1 > 0 Then Return a - b + 1 Else Return 1
     End Function
+    Sub UIHander()
+        Dim cmd As String
+uistart:
+        Console.Write("Command>>>")
+        cmd = Console.ReadLine
+        Select Case LCase(cmd)
+            Case "exit"
+                End
+            Case Else
+                Console.WriteLine("Unknown command.")
+        End Select
+        GoTo uistart
+    End Sub
 End Module
