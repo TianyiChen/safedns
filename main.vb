@@ -34,7 +34,7 @@ Module main
             End Using
         Else
             Dim iptemp As IPAddress = IPAddress.Parse(iptolisten)
-            Using server = New DnsServer(IPAddress.Any, 10, 10, AddressOf ProcessQuery)
+            Using server = New DnsServer(iptemp, 10, 10, AddressOf ProcessQuery)
                 server.Start() : Call UIHander()
             End Using
         End If
