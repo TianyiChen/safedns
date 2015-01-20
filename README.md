@@ -9,15 +9,6 @@ Using this tool will start a DNS service and the source was provided via https c
 You can use this tool to enhance the security of DNS when you are using a public network(For instance, a public WIFI) and under other circumstances (For example, if your ISP hijacks your DNS queries).
 
 
-#The only several things you need to assure are:
-
-	1.Resolve the domain name of the safe DNS server first and save it in your host, or the service won't be available.
-
-	2.The connection via port 443 is not blocked.
-
-	3.The port 53 of the computer is not used.
-
-
 #How to use?
 
 	1.Copy the dns.php to a PHP-supported web server( Using HTTPS is recommend).
@@ -32,3 +23,13 @@ You can use this tool to enhance the security of DNS when you are using a public
 	4.Set the DNS server of the devices you want to use safedns to the computer you run the client.
 
 	5.Enjoy clean DNS records!
+
+#The only several things you need to assure are:
+
+	1.Resolve the domain name of the safe DNS server first and save it in your host, or the service won't be available.
+
+	2.The connection via port 443 is not blocked.
+
+	3.The port 53 of the computer is not used.
+##PS:
+You may need to download the ARSoft.Tools.Net.dll form https://raw.githubusercontent.com/denxp/dummyDNServer/master/DummyDNServer/lib/ARSoft.Tools.Net.dll to run this application.
