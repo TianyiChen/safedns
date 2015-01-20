@@ -8,4 +8,3 @@ foreach ($hosts as $obj) {
 } else { 
 include "index_en.htm"; 
  } 
-?>  
