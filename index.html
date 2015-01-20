@@ -40,6 +40,23 @@
 <p>You can use this tool to enhance the security of DNS when you are using a public network(For instance, a public WIFI) and under other circumstances (For example, if your ISP hijacks your DNS queries).</p>
 
 <h1>
+<a id="how-to-use" class="anchor" href="#how-to-use" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to use?</h1>
+
+<pre><code>1.Copy the dns.php to a PHP-supported web server( Using HTTPS is recommend).
+
+2.Configure your blacklist.txt to avoid unnecessary requests.
+After each record, append a  ; or , or CR+LF.
+.domain indicates a domain and all its subdomains.
+You can refer to the demo file or the source code for more information.
+
+3.Start the VB.net client 
+
+4.Set the DNS server of the devices you want to use safedns to the computer you run the client.
+
+5.Enjoy clean DNS records!
+</code></pre>
+
+<h1>
 <a id="the-only-several-things-you-need-to-assure-are" class="anchor" href="#the-only-several-things-you-need-to-assure-are" aria-hidden="true"><span class="octicon octicon-link"></span></a>The only several things you need to assure are:</h1>
 
 <pre><code>1.Resolve the domain name of the safe DNS server first and save it in your host, or the service won't be available.
@@ -49,18 +66,10 @@
 3.The port 53 of the computer is not used.
 </code></pre>
 
-<h1>
-<a id="how-to-use" class="anchor" href="#how-to-use" aria-hidden="true"><span class="octicon octicon-link"></span></a>How to use?</h1>
+<h2>
+<a id="ps" class="anchor" href="#ps" aria-hidden="true"><span class="octicon octicon-link"></span></a>PS:</h2>
 
-<pre><code>1.Copy the dns.php to a PHP-supported web server( Using HTTPS is recommend).
-2.Configure your blacklist.txt to avoid unnecessary requests.
-After each record, append a  ; or , or CR+LF.
-.domain indicates a domain and all its subdomains.
-You can refer to the demo file or the source code for more information.
-3.Start the VB.net client 
-4.Set the DNS server of the devices you want to use safedns to the computer you run the client.
-5.Enjoy clean DNS records!
-</code></pre>
+<p>You may need to download the ARSoft.Tools.Net.dll form <a href="https://raw.githubusercontent.com/denxp/dummyDNServer/master/DummyDNServer/lib/ARSoft.Tools.Net.dll">https://raw.githubusercontent.com/denxp/dummyDNServer/master/DummyDNServer/lib/ARSoft.Tools.Net.dll</a> to run this application.</p>
         </section>
 
         <aside id="sidebar">
