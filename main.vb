@@ -113,7 +113,7 @@ Fnreply:
             domain = Mid(list, 1, InStr(list, ";") - 1)
             If Mid(domain, 1, 1) = "." Then
                 'If .domain
-                If q = Mid(domain, 2) Or Mid(q, w(Lenq, Len(domain))) = domain Then
+                If q = Mid(domain, 2) OrElse Mid(q, Lenq - Len(domain) + 1) = domain Then
                     Return True : Exit Function
                 End If
             Else
@@ -124,9 +124,6 @@ Fnreply:
             list = Mid(list, InStr(list, ";") + 1)
         Loop
         Return False
-    End Function
-    Function w(a As Integer, b As Integer) As UInteger
-        If a - b + 1 > 0 Then Return a - b + 1 Else Return 1
     End Function
     Sub UIHander()
         Dim cmd As String
