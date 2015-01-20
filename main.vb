@@ -17,8 +17,8 @@ Module main
     Dim cache(1000, 1) As String
     Dim currentCache As UInt64 = 0
     Dim blacklist As String
-    'The following variables are used for statistics usage.
-    '<Not defined yet.>
+    'The following variables are used for statistics usage.They are not accurate.
+    Dim SW_f, SW_c As UInteger 'forward cache
     ' Main entry point
     ' Inits the server and start listening
     ' Exit on keypress
@@ -43,13 +43,16 @@ Module main
     Private Function ProcessQuery(ByVal message As DnsMessageBase, ByVal clientAddress As IPAddress, ByVal protocol As ProtocolType) As DnsMessageBase
         Dim CTT As String
         message.IsQuery = False
-
         Dim query As DnsMessage = CType(message, DnsMessage)
         Dim address As IPAddress
     
         If (query IsNot Nothing And query.Questions.Count = 1) Then
 
             Dim question As DnsQuestion = query.Questions(0)
+
+            Console.WriteLine(clientAddress.ToString() & " : " & question.Name)
+
+
             'If the domain is in the black list.
             If IfMatchs(question.Name, blacklist) Then
                 CTT = "0.0.0.0;" : GoTo Fnreply
@@ -58,11 +61,12 @@ Module main
             For i As UInt64 = 0 To currentCache
                 If cache(i, 0) = question.Name Then
                     CTT = cache(i, 1)
+                    SW_c += 1
                     GoTo Fnreply
                 End If
             Next
-            Console.WriteLine(clientAddress.ToString() & " :: " & question.Name)
-            Console.WriteLine("Starting download:" + server + question.Name)
+            SW_f += 1
+            Console.WriteLine("Forwarding:" + question.Name)
             query.ReturnCode = ReturnCode.NoError
             Using wc As New WebClient
                 Try
@@ -71,10 +75,10 @@ Module main
                     Console.WriteLine(ex.Message)
                 End Try
             End Using
-            Console.WriteLine("Reply:" + CTT)
+            Console.WriteLine("Reply:" + question.Name + "=" + CTT)
             If InStr(CTT, ";") > 0 Then
                 'Valid response
-                ' CTT = Mid(CTT, 1, InStr(CTT, ";") - 1)
+
                 'add new cache
                 If currentCache \ 1000 = currentCache / 1000 Then ReDim Preserve cache(currentCache + 1000, 1)
                 If CacheLimit = currentCache Then GoTo nocache
@@ -132,6 +136,10 @@ uistart:
         Select Case LCase(cmd)
             Case "exit"
                 End
+            Case "cache-used"
+                Console.WriteLine("Cached:{0}   Total Space:{1}", currentCache.ToString, CacheLimit)
+            Case "summery"
+                Console.WriteLine("Total reqs received:{0}  Forwarded:{1}  Cached:{2}", SW_f + SW_c, SW_f, SW_c)
             Case Else
                 Console.WriteLine("Unknown command.")
         End Select
